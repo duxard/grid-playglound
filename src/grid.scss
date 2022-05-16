@@ -1,0 +1,41 @@
+@import "~ag-grid-community/src/styles/ag-theme-alpine/sass/ag-theme-alpine-mixin";
+@import "~ag-grid-community/dist/styles/ag-theme-base/sass/ag-theme-base";
+
+:root {
+  --appMainTextColor: #fff;
+  --rowBorderColor: green;
+  --headerRowBorderColor: red;
+  --headerBgColor: #6d6d6d;
+}
+
+@mixin ag-theme-matter {
+  @include ag-theme-base((
+    foreground-color: var(--appMainTextColor),
+    background-color: #333,
+    borders: false
+  ));
+
+  .ag-header {
+    border-bottom: 1px solid var(--headerRowBorderColor);
+  }
+
+  .ag-header-cell {
+    //background-color: ag-param(foreground-color);
+    //color: ag-param(background-color);
+    background-color: var(--headerBgColor);
+    color: var(--appMainTextColor)
+  }
+
+  .ag-header-cell-label {
+    font-style: italic;
+  }
+
+  .ag-row {
+    border-bottom: 1px solid var(--rowBorderColor);
+  }
+}
+
+// Applying the theme
+.dm-theme {
+  @include ag-theme-matter;
+}
