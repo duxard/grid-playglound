@@ -5,16 +5,18 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BasicGridComponent } from './components/basic-grid/basic-grid.component';
 import { AgGridModule } from 'ag-grid-angular';
+import { TotalValueRendererComponent } from './cell-renderers/total-value-renderer/total-value-renderer.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    BasicGridComponent
+    BasicGridComponent,
+    TotalValueRendererComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    AgGridModule.withComponents([])
+    AgGridModule.withComponents([TotalValueRendererComponent])
   ],
   providers: [],
   bootstrap: [AppComponent]

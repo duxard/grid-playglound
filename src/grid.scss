@@ -12,7 +12,9 @@
   @include ag-theme-base((
     foreground-color: var(--appMainTextColor),
     background-color: #333,
-    borders: false
+    borders: false,
+    selected-row-background-color: #04ff1c,
+    range-selection-border-color: violet
   ));
 
   .ag-header {
