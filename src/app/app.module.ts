@@ -7,13 +7,15 @@ import { BasicGridComponent } from './components/basic-grid/basic-grid.component
 import { AgGridModule } from 'ag-grid-angular';
 import { TotalValueRendererComponent } from './cell-renderers/total-value-renderer/total-value-renderer.component';
 import { PlaygroundComponent } from './components/playground/playground.component';
+import { BasicGridAsyncComponent } from './components/basic-grid-async/basic-grid-async.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     BasicGridComponent,
     TotalValueRendererComponent,
-    PlaygroundComponent
+    PlaygroundComponent,
+    BasicGridAsyncComponent
   ],
   imports: [
     BrowserModule,

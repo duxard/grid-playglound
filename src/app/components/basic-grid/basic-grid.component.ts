@@ -117,7 +117,7 @@ export class BasicGridComponent implements OnInit {
     this.onResize();
   }
 
-  onResize(): void {
+  private onResize(): void {
     this.gridApi && this.gridApi.sizeColumnsToFit();
   }
 }

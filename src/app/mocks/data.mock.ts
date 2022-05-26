@@ -6,3 +6,34 @@ export const CARS = [
   { car: 'car5', model: 'model5', price: '35', color: 'black', mileage: 1000 },
   { car: 'car6', model: 'model6', price: '40', color: 'pink', mileage: 1000 }
 ];
+
+export const FIN_DATA = [
+  {
+    name: 'IBM',
+    bid: 1,
+    mid: 2,
+    ask: 3,
+    volume: 4
+  },
+  {
+    name: 'GOOG',
+    bid: 1,
+    mid: 2,
+    ask: 3,
+    volume: 4
+  },
+  {
+    name: 'TSLA',
+    bid: 1,
+    mid: 2,
+    ask: 3,
+    volume: 4
+  },
+  {
+    name: 'ECV.L',
+    bid: 1,
+    mid: 2,
+    ask: 3,
+    volume: 4
+  },
+];
