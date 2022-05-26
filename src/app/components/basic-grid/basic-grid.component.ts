@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {
   CellClickedEvent,
   ColDef,
-  ColumnApi,
+  ColumnApi, ColumnResizedEvent,
   GridApi,
   GridOptions,
   GridReadyEvent,
@@ -54,6 +54,7 @@ export class BasicGridComponent implements OnInit {
     headerHeight: 25,
     rowHeight: 40,
     onCellClicked: (event: CellClickedEvent) => console.log(event),
+    colResizeDefault: 'shift',
     // applied for all columns
     defaultColDef: {
       resizable: true,
@@ -64,6 +65,11 @@ export class BasicGridComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  onColumnResized(event: ColumnResizedEvent) {
+    console.log(this.gridColumnApi.getColumnState())
+    console.log(event)
   }
 
   onGridReady(params: GridReadyEvent): void {
@@ -102,6 +108,17 @@ export class BasicGridComponent implements OnInit {
     this.gridColumnApi.applyColumnState({
       defaultState: { hide: false },
     });
+  }
+
+  onAddColumn(): void {
+    const colDefs = this.gridApi.getColumnDefs();
+    colDefs?.push({colId: 'tmp', headerName: 'Tmp'});
+    this.gridApi.setColumnDefs(colDefs as ColDef[]);
+    this.onResize();
+  }
+
+  onResize(): void {
+    this.gridApi && this.gridApi.sizeColumnsToFit();
   }
 }
 

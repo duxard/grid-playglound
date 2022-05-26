@@ -8,6 +8,7 @@
   [rowSelection]="rowSelection"
   [rowDragManaged]="true"
   (gridReady)="onGridReady($event)"
+  (columnResized)="onColumnResized($event)"
 >
 </ag-grid-angular>
 
@@ -16,3 +17,4 @@
 <button (click)="toggleTheFirstColumn()">Show only first column</button><br>
 <button (click)="onBtnHide()">Hide some columns</button>
 <button (click)="onBtnShow()">Show some columns</button><br>
+<button (click)="onAddColumn()">Add column</button><br>
