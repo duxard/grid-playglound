@@ -1,7 +1,68 @@
 import { Component, OnInit } from '@angular/core';
-import { ColDef, ColumnApi, GridApi, GridOptions, GridReadyEvent } from 'ag-grid-community';
+import {
+  CellClassParams, CellClassRules,
+  ColDef,
+  ColumnApi,
+  GridApi,
+  GridOptions,
+  GridReadyEvent, GridSizeChangedEvent
+} from 'ag-grid-community';
 import { FIN_DATA } from '../../mocks/data.mock';
-import { Observable, timer, map } from 'rxjs';
+import { fromEvent, Subscription, Observable, timer, map } from 'rxjs';
+
+type EquityData = {
+  name: string;
+  bid: number;
+  mid: number;
+  ask: number;
+  volume: number;
+};
+
+const CELL_CLASS_RULES: CellClassRules = {
+  'negative-value': (params: CellClassParams):boolean => {
+    return params.value < 0
+  },
+  'positive-value':  (params: CellClassParams):boolean => {
+    return params.value >= 0
+  }
+};
+
+const COLUMN_DEFS: ColDef[] = [
+  {
+    headerName: 'Name',
+    field: 'name',
+    cellClass: 'rightBorder',
+    headerClass: 'rightBorder'
+  },
+  {
+    headerName: 'Bid',
+    field: 'bid',
+    cellClassRules: CELL_CLASS_RULES,
+    headerClass: 'rightBorder',
+    cellClass: 'rightBorder'
+  },
+  {
+    headerName: 'Mid',
+    field: 'mid',
+    cellClassRules: CELL_CLASS_RULES,
+    headerClass: 'rightBorder',
+    cellClass: 'rightBorder'
+  },
+  {
+    headerName: 'Ask',
+    field: 'ask',
+    cellClassRules: CELL_CLASS_RULES,
+    headerClass: 'rightBorder',
+    cellClass: 'rightBorder'
+  },
+  {
+    headerName: 'Volume',
+    field: 'volume',
+    cellClassRules: CELL_CLASS_RULES
+  }
+];
+
+const INTERVAL: number = 500;
 
 @Component({
   selector: 'app-basic-grid-async',
@@ -13,14 +74,13 @@ export class BasicGridAsyncComponent implements OnInit {
   private gridApi!: GridApi;
   private gridColumnApi!: ColumnApi;
   private gridReady = false;
+  private gridWidth!: number;
 
-  columnDefs: ColDef[] = [
-    { headerName: 'Name', field: 'name' },
-    { headerName: 'Bid', field: 'bid' },
-    { headerName: 'Mid', field: 'mid' },
-    { headerName: 'Ask', field: 'ask' },
-    { headerName: 'Volume', field: 'volume' }
-  ];
+  private $obs!: Observable<number>;
+  private $resizeObservable!: Observable<Event>;
+  private $resizeSubscription!: Subscription;
+
+  columnDefs: ColDef[] = COLUMN_DEFS;
 
   gridOptions: GridOptions = {
     headerHeight: 25,
@@ -32,30 +92,42 @@ export class BasicGridAsyncComponent implements OnInit {
   };
 
   rowData: any;
-  $obs!: Observable<unknown>;
 
   constructor() { }
 
   ngOnInit(): void {
     // if we don't use tick:
     // this.rowData = of(FIN_DATA);
-    this.$obs = timer(1000, 300);
+
+    // get data
+    this.$obs = timer(1000, INTERVAL);
     this.$obs.pipe(map(() => this.updateData())).subscribe((data: any) => {
       this.gridApi.setRowData(data);
-    })
+    });
+
+    // adjust columns width on resize
+    this.$resizeObservable = fromEvent(window, 'resize');
+    this.$resizeSubscription = this.$resizeObservable.subscribe(() => this.onResize());
   }
 
   onGridReady(params: GridReadyEvent): void {
     this.gridApi = params.api;
     this.gridColumnApi = params.columnApi;
-
     this.gridReady = true;
-    this.gridOptions.api?.sizeColumnsToFit();
+
+    this.onResize();
   }
 
-  private updateData(): unknown {
-    const data = FIN_DATA;
-    return data.map((el, id, arr) => {
+  onGridSizeChanged($event: GridSizeChangedEvent): void {
+    this.gridWidth = $event.clientWidth;
+  }
+
+  private onResize(): void {
+    this.gridApi && this.gridApi.sizeColumnsToFit();
+  }
+
+  private updateData(): EquityData[] {
+    return FIN_DATA.map((el, id, arr) => {
       return {
         name: el.name,
         bid: rand(),
@@ -67,4 +139,4 @@ export class BasicGridAsyncComponent implements OnInit {
   }
 }
 
-const rand = ():number => Math.floor(1 + Math.random()*100);
+const rand = ():number => Math.floor(-100 + Math.random()*200);

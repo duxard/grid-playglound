@@ -2,38 +2,62 @@
 @import "~ag-grid-community/dist/styles/ag-theme-base/sass/ag-theme-base";
 
 :root {
+  --gridBgCol:  #1d1d1d;
   --appMainTextColor: #fff;
-  --rowBorderColor: green;
+  --rowAndCellBorderColor: green;
   --headerRowBorderColor: red;
   --headerBgColor: #6d6d6d;
+
+  --rowAndCellBorder: 1px solid var(--rowAndCellBorderColor);
+  --headerOuterBorder: 1px solid var(--headerRowBorderColor);
+}
+
+@mixin addRightBorder {
+  &.rightBorder {
+    border-right: var(--rowAndCellBorder);
+  }
 }
 
 @mixin ag-theme-matter {
   @include ag-theme-base((
     foreground-color: var(--appMainTextColor),
-    background-color: #333,
+    background-color: var(--gridBgCol),
     borders: false,
     selected-row-background-color: #04ff1c,
     range-selection-border-color: violet
   ));
 
   .ag-header {
-    border-bottom: 1px solid var(--headerRowBorderColor);
+    border-bottom: var(--headerOuterBorder);
+
+    .ag-header-cell {
+      @include addRightBorder;
+
+      //background-color: ag-param(foreground-color);
+      //color: ag-param(background-color);
+      background-color: var(--headerBgColor);
+      color: var(--appMainTextColor);
+
+      .ag-header-cell-label {
+        font-style: italic;
+      }
+    }
   }
 
-  .ag-header-cell {
-    //background-color: ag-param(foreground-color);
-    //color: ag-param(background-color);
-    background-color: var(--headerBgColor);
-    color: var(--appMainTextColor)
-  }
-
-  .ag-header-cell-label {
-    font-style: italic;
+  .ag-cell {
+    @include addRightBorder;
   }
 
   .ag-row {
-    border-bottom: 1px solid var(--rowBorderColor);
+    border-bottom: var(--rowAndCellBorder);
+  }
+
+  .negative-value {
+    color: red;
+  }
+
+  .positive-value {
+    color: green;
   }
 }
 
