@@ -4,6 +4,7 @@
   [rowData]="rowData | async"
   [columnDefs]="columnDefs"
   [gridOptions]="gridOptions"
+  [suppressDragLeaveHidesColumns]="true"
   (gridReady)="onGridReady($event)"
   (gridSizeChanged)="onGridSizeChanged($event)"
 >

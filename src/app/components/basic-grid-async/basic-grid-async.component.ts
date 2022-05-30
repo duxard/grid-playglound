@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   CellClassParams,
   CellClassRules,
+  CellStyle,
   ColDef,
   ColumnApi,
   GridApi,
@@ -61,7 +62,14 @@ const COLUMN_DEFS: ColDef[] = [
   {
     headerName: 'Volume',
     field: 'volume',
-    cellClassRules: CELL_CLASS_RULES
+    cellClassRules: CELL_CLASS_RULES,
+    cellStyle: (params: CellClassParams): CellStyle => {
+      if(typeof(params.value) === 'number') {
+        return { textAlign: 'right' }
+      } else {
+        return { textAlign: 'left' }
+      }
+    }
   }
 ];
 
