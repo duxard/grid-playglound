@@ -1,14 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  CellClassParams, CellClassRules,
+  CellClassParams,
+  CellClassRules,
   ColDef,
   ColumnApi,
   GridApi,
   GridOptions,
-  GridReadyEvent, GridSizeChangedEvent
+  GridReadyEvent,
+  GridSizeChangedEvent
 } from 'ag-grid-community';
 import { FIN_DATA } from '../../mocks/data.mock';
-import { fromEvent, Subscription, Observable, timer, map } from 'rxjs';
+import { fromEvent, Subscription, Observable, Subject, timer } from 'rxjs';
+import { takeUntil, map } from 'rxjs/operators';
 
 type EquityData = {
   name: string;
@@ -69,7 +72,7 @@ const INTERVAL: number = 500;
   templateUrl: './basic-grid-async.component.html',
   styleUrls: ['./basic-grid-async.component.scss']
 })
-export class BasicGridAsyncComponent implements OnInit {
+export class BasicGridAsyncComponent implements OnInit, OnDestroy {
 
   private gridApi!: GridApi;
   private gridColumnApi!: ColumnApi;
@@ -79,6 +82,8 @@ export class BasicGridAsyncComponent implements OnInit {
   private $obs!: Observable<number>;
   private $resizeObservable!: Observable<Event>;
   private $resizeSubscription!: Subscription;
+  private $pollingSubscription!: Subscription;
+  private $done: Subject<void> = new Subject<void>();
 
   columnDefs: ColDef[] = COLUMN_DEFS;
 
@@ -101,13 +106,21 @@ export class BasicGridAsyncComponent implements OnInit {
 
     // get data
     this.$obs = timer(1000, INTERVAL);
-    this.$obs.pipe(map(() => this.updateData())).subscribe((data: any) => {
+    this.$pollingSubscription = this.$obs.pipe(
+      map(() => this.updateData()),
+      takeUntil(this.$done)
+    ).subscribe((data: any) => {
       this.gridApi.setRowData(data);
     });
 
     // adjust columns width on resize
     this.$resizeObservable = fromEvent(window, 'resize');
     this.$resizeSubscription = this.$resizeObservable.subscribe(() => this.onResize());
+  }
+
+  ngOnDestroy(): void {
+    this.$resizeSubscription.unsubscribe();
+    this.$pollingSubscription.unsubscribe();
   }
 
   onGridReady(params: GridReadyEvent): void {
@@ -136,6 +149,11 @@ export class BasicGridAsyncComponent implements OnInit {
         volume: rand()
       }
     });
+  }
+
+  onStopTicking(): void {
+    this.$done.next();
+    this.$done.complete();
   }
 }
 

@@ -67,9 +67,8 @@ export class BasicGridComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  onColumnResized(event: ColumnResizedEvent) {
-    console.log(this.gridColumnApi.getColumnState())
-    console.log(event)
+  onColumnResized(event: ColumnResizedEvent): void {
+    console.log(this.gridColumnApi.getColumnState());
   }
 
   onGridReady(params: GridReadyEvent): void {
@@ -79,14 +78,13 @@ export class BasicGridComponent implements OnInit {
 
     this.gridReady = true;
     this.gridOptions.api?.sizeColumnsToFit();
-
   }
 
   onClearButtonClick(): void {
     this.gridApi?.setRowData([]);
   }
 
-  onGetAllColumns():void {
+  onGetAllColumns(): void {
     console.log(this.gridColumnApi.getAllColumns());
   }
 
