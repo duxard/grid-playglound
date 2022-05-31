@@ -74,6 +74,7 @@ const COLUMN_DEFS: ColDef[] = [
 ];
 
 const INTERVAL: number = 500;
+const DELAY: number = 2000;
 
 @Component({
   selector: 'app-basic-grid-async',
@@ -106,6 +107,11 @@ export class BasicGridAsyncComponent implements OnInit, OnDestroy {
 
   rowData: any;
 
+  overlayLoadingTemplate =
+    '<span class="ag-overlay-loading-center">Please wait while your rows are loading</span>';
+  overlayNoRowsTemplate =
+    '<span style="padding: 10px; border: 2px solid #444; background: #fff; color: #000">This is a custom \'no rows\' overlay</span>';
+
   constructor() { }
 
   ngOnInit(): void {
@@ -113,7 +119,7 @@ export class BasicGridAsyncComponent implements OnInit, OnDestroy {
     // this.rowData = of(FIN_DATA);
 
     // get data
-    this.$obs = timer(1000, INTERVAL);
+    this.$obs = timer(DELAY, INTERVAL);
     this.$pollingSubscription = this.$obs.pipe(
       map(() => this.updateData()),
       takeUntil(this.$done)
@@ -151,6 +157,19 @@ export class BasicGridAsyncComponent implements OnInit, OnDestroy {
   onBtnExport(): void {
     this.gridApi && this.gridApi.exportDataAsCsv();
   }
+
+  onBtShowLoading(): void {
+    this.gridApi.showLoadingOverlay();
+  }
+
+  onBtShowNoRows(): void {
+    this.gridApi.showNoRowsOverlay();
+  }
+
+  onBtHide(): void {
+    this.gridApi.hideOverlay();
+  }
+
 
   private onResize(): void {
     this.gridApi && this.gridApi.sizeColumnsToFit();

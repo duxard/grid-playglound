@@ -5,10 +5,15 @@
   [columnDefs]="columnDefs"
   [gridOptions]="gridOptions"
   [suppressDragLeaveHidesColumns]="true"
+  [overlayLoadingTemplate]="overlayLoadingTemplate"
+  [overlayNoRowsTemplate]="overlayNoRowsTemplate"
   (gridReady)="onGridReady($event)"
   (gridSizeChanged)="onGridSizeChanged($event)"
 >
 </ag-grid-angular>
 <button style="margin-top: 20px" (click)="onStopTicking()">Stop ticking</button>
 <button (click)="onBtnExport()">Download CSV export file</button>
+<button (click)="onBtShowLoading()">Show Loading Overlay</button>
+<button (click)="onBtShowNoRows()">Show No Rows Overlay</button>
+<button (click)="onBtHide()">Hide Overlay</button>
 
