@@ -143,6 +143,15 @@ export class BasicGridAsyncComponent implements OnInit, OnDestroy {
     this.gridWidth = $event.clientWidth;
   }
 
+  onStopTicking(): void {
+    this.$done.next();
+    this.$done.complete();
+  }
+
+  onBtnExport(): void {
+    this.gridApi && this.gridApi.exportDataAsCsv();
+  }
+
   private onResize(): void {
     this.gridApi && this.gridApi.sizeColumnsToFit();
   }
@@ -157,11 +166,6 @@ export class BasicGridAsyncComponent implements OnInit, OnDestroy {
         volume: rand()
       }
     });
-  }
-
-  onStopTicking(): void {
-    this.$done.next();
-    this.$done.complete();
   }
 }
 
