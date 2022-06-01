@@ -1,44 +1,49 @@
-import { Component, OnInit } from '@angular/core';
-import { map, take, interval, Observable, Subscription } from 'rxjs';
-
-type User = {user: string, age: number}
+import {
+  AfterContentInit,
+  AfterViewInit,
+  Component,
+  ContentChild, ContentChildren,
+  ElementRef,
+  OnInit,
+  QueryList, TemplateRef,
+  ViewChild,
+  ViewChildren
+} from '@angular/core';
 
 @Component({
   selector: 'app-playground',
   templateUrl: './playground.component.html',
   styleUrls: ['./playground.component.scss']
 })
-export class PlaygroundComponent implements OnInit {
+export class PlaygroundComponent implements OnInit, AfterViewInit, AfterContentInit {
 
-  data: Array<User> = [
-    {user: 'Alex', age: 10},
-    {user: 'John', age: 20}
-  ];
+  @ViewChild('link', {static: false, read: ElementRef}) link!: ElementRef<HTMLElement>;
+  @ViewChildren('link') links?: QueryList<ElementRef<HTMLElement>>;
 
-  obs$!: Observable<number>;
-  sub$!: Subscription;
+  @ViewChildren('template') templates1?: QueryList<TemplateRef<ElementRef>>;
+  // or
+  @ViewChildren(TemplateRef) templates2?: QueryList<TemplateRef<ElementRef>>;
+
+  @ContentChildren('p_link') p_link?: QueryList<ElementRef<HTMLElement>>;
+
+  showTemplate = true;
 
   constructor() { }
 
   ngOnInit(): void {
-    this.getData().pipe(take(5)).subscribe((data) => {
-      console.log(data);
-    });
 
   }
 
-  private getData():Observable<Array<User>> {
-    this.obs$ = interval(1000);
-
-    return this.obs$.pipe(map(() => {
-      return this.data.map((val, id, arr) => (
-        {
-          user: val.user,
-          age: getRandomNumber()
-        }
-      ));
-    }));
+  ngAfterViewInit() {
+    console.log(this.links?.toArray());
+    console.log(this.templates1?.toArray());
+    console.log(this.templates2?.toArray());
+    console.log(this.p_link?.toArray());
   }
+
+  ngAfterContentInit() {
+
+  }
+
 }
 
-const getRandomNumber = (): number => Math.floor(1 + Math.random()*100);

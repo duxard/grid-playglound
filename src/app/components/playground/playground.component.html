@@ -1,1 +1,19 @@
-<p>playground works!</p>
+<p #link>One</p>
+<p #link>Two</p>
+<p #link>Three</p>
+
+<ng-container>
+  <p>container</p>
+</ng-container>
+
+<ng-template [ngIf]="showTemplate" #template>
+  <p>template 1</p>
+</ng-template>
+
+<ng-template [ngIf]="showTemplate" #template>
+  <p>template 2</p>
+</ng-template>
+
+<ng-content></ng-content>
+
+<p>After content projection</p>
