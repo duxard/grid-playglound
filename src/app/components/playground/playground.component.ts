@@ -1,22 +1,29 @@
 import {
-  AfterContentInit, AfterViewChecked,
+  AfterContentInit,
+  AfterViewChecked,
   AfterViewInit,
-  ChangeDetectionStrategy, ChangeDetectorRef,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   ContentChildren,
-  ElementRef, Input,
+  ElementRef,
+  Input,
   OnInit,
   QueryList,
   TemplateRef,
   ViewChild,
   ViewChildren
 } from '@angular/core';
+import {TestService} from '../../services/test.service';
 
 @Component({
   selector: 'app-playground',
   templateUrl: './playground.component.html',
   styleUrls: ['./playground.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    { provide: TestService, useClass: TestService }
+  ]
 })
 export class PlaygroundComponent implements OnInit, AfterViewInit, AfterContentInit, AfterViewChecked {
   @Input() user!: {name: string, age: number};
@@ -32,10 +39,14 @@ export class PlaygroundComponent implements OnInit, AfterViewInit, AfterContentI
 
   showTemplate = true;
 
-  constructor(private cdr: ChangeDetectorRef) { }
+  constructor(
+    private cdr: ChangeDetectorRef,
+    private testService: TestService,
+    private elByClassName: ElementRef
+  ) { }
 
   ngOnInit(): void {
-
+    this.testService.logMessage();
   }
 
   ngAfterViewInit() {
@@ -43,6 +54,11 @@ export class PlaygroundComponent implements OnInit, AfterViewInit, AfterContentI
     console.log(this.templates1?.toArray());
     console.log(this.templates2?.toArray());
     console.log(this.p_link?.toArray());
+
+    const btnElementList: NodeList = (<HTMLElement>this.elByClassName.nativeElement).querySelectorAll(
+      '.myButton'
+    );
+    (btnElementList[0] as HTMLButtonElement).innerHTML = 'New name';
   }
 
   ngAfterContentInit() {
