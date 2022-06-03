@@ -1,9 +1,11 @@
+<p>{{user.name}} : {{user.age}}</p>
+
 <p #link>One</p>
 <p #link>Two</p>
 <p #link>Three</p>
 
 <ng-container>
-  <p>container</p>
+  <p>container 1</p>
 </ng-container>
 
 <ng-template [ngIf]="showTemplate" #template>
@@ -14,6 +16,14 @@
   <p>template 2</p>
 </ng-template>
 
+<ng-template [ngIf]="false">
+  <p>template 3</p>
+</ng-template>
+
 <ng-content></ng-content>
 
 <p>After content projection</p>
+<ng-container [ngTemplateOutlet]="tpl"></ng-container>
+<ng-template #tpl>
+  <p>template 4</p>
+</ng-template>

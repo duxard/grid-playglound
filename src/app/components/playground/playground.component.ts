@@ -1,11 +1,13 @@
 import {
-  AfterContentInit,
+  AfterContentInit, AfterViewChecked,
   AfterViewInit,
+  ChangeDetectionStrategy, ChangeDetectorRef,
   Component,
-  ContentChild, ContentChildren,
-  ElementRef,
+  ContentChildren,
+  ElementRef, Input,
   OnInit,
-  QueryList, TemplateRef,
+  QueryList,
+  TemplateRef,
   ViewChild,
   ViewChildren
 } from '@angular/core';
@@ -13,9 +15,11 @@ import {
 @Component({
   selector: 'app-playground',
   templateUrl: './playground.component.html',
-  styleUrls: ['./playground.component.scss']
+  styleUrls: ['./playground.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PlaygroundComponent implements OnInit, AfterViewInit, AfterContentInit {
+export class PlaygroundComponent implements OnInit, AfterViewInit, AfterContentInit, AfterViewChecked {
+  @Input() user!: {name: string, age: number};
 
   @ViewChild('link', {static: false, read: ElementRef}) link!: ElementRef<HTMLElement>;
   @ViewChildren('link') links?: QueryList<ElementRef<HTMLElement>>;
@@ -28,7 +32,7 @@ export class PlaygroundComponent implements OnInit, AfterViewInit, AfterContentI
 
   showTemplate = true;
 
-  constructor() { }
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit(): void {
 
@@ -45,5 +49,8 @@ export class PlaygroundComponent implements OnInit, AfterViewInit, AfterContentI
 
   }
 
+  ngAfterViewChecked() {
+    this.cdr.detectChanges();
+  }
 }
 
